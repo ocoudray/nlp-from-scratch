@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "nlp-from-scratch"
+version = "0.1.0"
+description = "Custom project to experiment language models and how they are built and trained"
+authors = ["ocoudray <ocdy96@gmail.com>"]
+packages = [{ include = "nlp_from_scratch", from = "src" }]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+torch = "^2.5.1"
+numpy = "^2.2.2"
+pandas = "^2.2.3"
+datasets = "^3.2.0"
+tokenizers = "^0.21.0"
+loguru = "^0.7.3"
+lightning = "^2.5.0.post0"
+tensorboard = "^2.18.0"
+transformers = "^4.48.3"
+zstandard = "^0.23.0"
+
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
