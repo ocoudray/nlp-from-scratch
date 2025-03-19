@@ -19,6 +19,8 @@ tensorboard = "^2.18.0"
 transformers = "^4.48.3"
 zstandard = "^0.23.0"
 click = "^8.1.8"
+pylint = "^3.3.5"
+pytest = "^8.3.5"
 
 
 [tool.poetry.group.dev.dependencies]
