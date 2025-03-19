@@ -1,42 +1,68 @@
-from datasets import load_dataset
-from tokenizers import Tokenizer, models, normalizers, pre_tokenizers, trainers
-from nlp_from_scratch.utils import get_filtered_texts
-from nlp_from_scratch.constants import VOCAB_SIZE, TOKENIZER_SAVE_PATH
+import click
 from loguru import logger
 
+from nlp_from_scratch.constants import TOKENIZER_SAVE_PATH
+from nlp_from_scratch.tokenizer.tokenizer_trainer import TokenizerTrainer
 
-# * Load Wikipedia dataset
-logger.info("Load Wikipedia dataset")
-dataset = load_dataset("wikipedia", "20220301.en", split="train")
-logger.success("OK")
 
-# Step 1: Initialize the WordPiece tokenizer
-logger.info("Set up tokenizer and trainer")
-tokenizer = Tokenizer(models.WordPiece(unk_token="[UNK]"))
-
-# Step 2: Set up normalization (e.g., lowercase, strip accents)
-tokenizer.normalizer = normalizers.Sequence([
-    normalizers.NFD(),  # Decompose Unicode characters
-    normalizers.Lowercase(),  # Convert to lowercase
-    normalizers.StripAccents()  # Remove accents
-])
-
-# Step 3: Define pre-tokenization (e.g., split by whitespace)
-tokenizer.pre_tokenizer = pre_tokenizers.Whitespace()
-
-# Step 4: Set up the trainer
-trainer = trainers.WordPieceTrainer(
-    vocab_size=VOCAB_SIZE,  # Vocabulary size
-    special_tokens=["[PAD]", "[UNK]", "[CLS]", "[SEP]", "[MASK]"]  # Special tokens
+@click.command()
+@click.option(
+    "--vocab_size",
+    default=50000,
+    help="Vocabulary size for the tokenizer.",
 )
-logger.success("OK")
+@click.option(
+    "--max_inputs",
+    default=1000000,
+    help="Max number of texts to train the tokenizer on (one text = one item of dataset)",
+)
+@click.option(
+    "--dataset_name",
+    default="monology/pile-uncopyrighted",
+    help="Name of the dataset to use.",
+)
+@click.option(
+    "--split",
+    default="train",
+    help="Split of the dataset to use.",
+)
+@click.option(
+    "--text_key",
+    default="text",
+    help="Key for the text data in the dataset.",
+)
+@click.option(
+    "--path",
+    default=TOKENIZER_SAVE_PATH,
+    help="Path to save the trained tokenizer.",
+)
+def train_tokenizer(
+    vocab_size,
+    max_inputs,
+    dataset_name,
+    split,
+    text_key,
+    path,
+):
+    # Step 1: Initialize the WordPiece tokenizer
+    logger.info("Set up tokenizer and trainer")
+    tokenizer_trainer = TokenizerTrainer(vocab_size=vocab_size, max_inputs=max_inputs)
+    logger.success("OK")
 
-# Step 5: Train the tokenizer on your text files
-logger.info("Train tokenizer")
-tokenizer.train_from_iterator(get_filtered_texts(dataset), trainer)
-logger.success("OK")
+    # Step 2: Train tokenizer
+    logger.info("Train tokenizer")
+    tokenizer_trainer.train(
+        dataset_name=dataset_name,
+        split=split,
+        text_key=text_key,
+    )
+    logger.success("OK")
 
-# Step 6: Save as json
-logger.info("Save as json")
-tokenizer.save(TOKENIZER_SAVE_PATH)
-logger.success("OK")
+    # Step 3: Save tokenizer
+    logger.info("Save tokenizer")
+    tokenizer_trainer.to_json(path)
+    logger.success("OK")
+
+
+if __name__ == "__main__":
+    train_tokenizer()
