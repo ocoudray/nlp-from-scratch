@@ -1,4 +1,6 @@
-TOKENIZER_SAVE_PATH = "/Users/ocoudray/Documents/Projects/nlp-from-scratch/notebooks/wordpiece_tokenizer.json"
+TOKENIZER_SAVE_PATH = (
+    "/Users/ocoudray/Documents/Projects/nlp-from-scratch/models/tokenizer.json"
+)
 FREQUENCIES_SAVE_PATH = (
     "/Users/ocoudray/Documents/Projects/nlp-from-scratch/notebooks/frequencies.npy"
 )

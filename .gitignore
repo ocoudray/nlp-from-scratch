@@ -2,3 +2,4 @@ notebooks/*
 tb_logs/*
 *.pyc
 .DS_Store
+models/*
