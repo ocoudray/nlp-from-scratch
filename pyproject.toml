@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Custom project to experiment language models and how they are built and trained"
 authors = ["ocoudray <ocdy96@gmail.com>"]
 packages = [{ include = "nlp_from_scratch", from = "src" }]
-readme = "README.md"
+readme = "Readme.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
