@@ -30,7 +30,7 @@ jobs:
 
     - name: Lint with Pylint
       run: |
-        poetry run pylint your_module_name
+        poetry run pylint .
 
     - name: Test with Pytest
       run: |
