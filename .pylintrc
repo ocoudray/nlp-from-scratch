@@ -1,0 +1,11 @@
+[MASTER]
+ignore=CVS
+
+[MESSAGES CONTROL]
+disable=
+    missing-function-docstring,
+    missing-module-docstring,
+    missing-class-docstring
+
+[TYPECHECK]
+ignored-classes=click.Option,click.Command

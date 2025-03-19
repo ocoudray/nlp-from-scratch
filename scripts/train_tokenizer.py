@@ -14,7 +14,8 @@ from nlp_from_scratch.tokenizer.tokenizer_trainer import TokenizerTrainer
 @click.option(
     "--max_inputs",
     default=1000000,
-    help="Max number of texts to train the tokenizer on (one text = one item of dataset)",
+    help="""Max number of texts to train the tokenizer
+    on (one text = one item of dataset)""",
 )
 @click.option(
     "--dataset_name",
@@ -65,4 +66,4 @@ def train_tokenizer(
 
 
 if __name__ == "__main__":
-    train_tokenizer()
+    train_tokenizer()  # pylint: disable=no-value-for-parameter

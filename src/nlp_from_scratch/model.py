@@ -3,9 +3,8 @@ import math
 import torch
 from lightning import LightningModule
 from torch import nn
-from transformers import get_linear_schedule_with_warmup
 
-from nlp_from_scratch.constants import MAX_LEN, N_STEPS, START_LR, VOCAB_SIZE
+from nlp_from_scratch.constants import MAX_LEN, VOCAB_SIZE
 
 
 class PositionalEncoding(nn.Module):

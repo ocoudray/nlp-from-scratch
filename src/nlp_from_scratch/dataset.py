@@ -9,7 +9,6 @@ from tokenizers import Tokenizer
 from torch.utils.data.dataset import Dataset
 
 from nlp_from_scratch.constants import (
-    CHUNKS_POSITIONS_PATH,
     FREQUENCIES_SAVE_PATH,
     MAX_LEN,
     TOKENIZER_SAVE_PATH,

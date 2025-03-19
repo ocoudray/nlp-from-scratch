@@ -36,18 +36,6 @@ def convert_counter_to_npy(c: Counter) -> np.ndarray:
     return vect / vect.sum()
 
 
-# def get_chunks_from_text(text, text_id, tokenizer):
-#     tokens = np.array([11] + tokenizer.encode(text).ids)
-#     dot_positions = np.where(np.array(tokens) == 11)[0]
-#     chunks = []
-#     for id_start in range(len(dot_positions)):
-#         id_end = id_start
-#         while id_end + 1 < len(dot_positions) and dot_positions[id_end + 1] - dot_positions[id_start] < 255:
-#             id_end += 1
-#         chunks.append((text_id, int(dot_positions[id_start]), int(dot_positions[id_end])))
-#     return chunks
-
-
 def get_chunks_from_text(text, tokenizer, cls_token, pad_token):
     tokens = torch.tensor([11] + tokenizer.encode(text).ids, dtype=torch.long)
     dot_positions = torch.where(tokens == 11)[0]
@@ -77,7 +65,10 @@ def get_chunks_from_text(text, tokenizer, cls_token, pad_token):
     return chunks
 
 
-def path_to_last_checkpoint(model_name: str, version: int):
+def path_to_last_checkpoint(
+    model_name: str,
+    version: int,
+):
     cpkt_folder = f"{TB_LOGS_PATH_PREFIX}{model_name}/version_{version}/checkpoints/"
     checkpoint_files = sorted(os.listdir(cpkt_folder))
     print(checkpoint_files)
