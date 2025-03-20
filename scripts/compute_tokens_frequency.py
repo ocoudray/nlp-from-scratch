@@ -1,8 +1,10 @@
-from nlp_from_scratch.dataset import TextDataset
 from collections import Counter
-from tqdm.auto import tqdm
+
 import numpy as np
+from tqdm.auto import tqdm
+
 from nlp_from_scratch.constants import FREQUENCIES_SAVE_PATH
+from nlp_from_scratch.dataset import TextDataset
 from nlp_from_scratch.utils import convert_counter_to_npy
 
 text_dataset = TextDataset.load_from_save()

@@ -45,9 +45,8 @@ def iterate_other_dataset(
         split=split,
         streaming=True,
     )
-    iterator = dataset.__iter__()
     k = 0
-    for item in tqdm(iterator, total=max_iter):
+    for item in tqdm(dataset, total=max_iter):
         if k >= max_iter:
             break
         k += 1

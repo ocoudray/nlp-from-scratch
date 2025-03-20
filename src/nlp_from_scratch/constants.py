@@ -7,6 +7,9 @@ FREQUENCIES_SAVE_PATH = (
 CHUNKS_POSITIONS_PATH = (
     "/Users/ocoudray/Documents/Projects/nlp-from-scratch/notebooks/chunk_positions.json"
 )
+DUMMY_JSON_FILE_PATH = (
+    "/Users/ocoudray/Documents/Projects/nlp-from-scratch/data/dummy.json"
+)
 TB_LOGS_PATH_PREFIX = "/Users/ocoudray/Documents/Projects/nlp-from-scratch/tb_logs/"
 REGEX_EPOCH_STEPS = r"epoch=(?P<epoch>\d+)-step=(?P<step>\d+)\.ckpt"
 VOCAB_SIZE = 10_000

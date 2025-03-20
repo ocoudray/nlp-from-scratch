@@ -40,14 +40,13 @@ def get_chunks_from_text(text, tokenizer, cls_token, pad_token):
     tokens = torch.tensor([11] + tokenizer.encode(text).ids, dtype=torch.long)
     dot_positions = torch.where(tokens == 11)[0]
     chunks = []
-    for id_start in range(len(dot_positions)):
+    for id_start, _ in enumerate(dot_positions):
         id_end = id_start
         while (
             id_end + 1 < len(dot_positions)
             and dot_positions[id_end + 1] - dot_positions[id_start] < 255
         ):
             id_end += 1
-        # chunks.append((text_id, int(dot_positions[id_start]), int(dot_positions[id_end])))
         encoded = F.pad(
             tokens[int(dot_positions[id_start]) + 1 : int(dot_positions[id_end]) + 1],
             pad=(1, 0),

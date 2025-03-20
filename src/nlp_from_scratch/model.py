@@ -70,11 +70,11 @@ class SimpleTransformer(LightningModule):
     def _classify_output(self, x):
         return self.fc_out(x)
 
-    def forward(self, x, mask=None):
+    def forward(self, x, mask=None):  # pylint: disable=arguments-differ
         x = self.get_embeddings(x, mask=mask)
         return self._classify_output(x)  # Final output
 
-    def training_step(self, batch, batch_idx):
+    def training_step(self, batch):  # pylint: disable=arguments-differ
         # training_step defines the train loop.
         inputs, mask, attention_mask, labels = batch
         output = self.forward(inputs, mask=attention_mask)
