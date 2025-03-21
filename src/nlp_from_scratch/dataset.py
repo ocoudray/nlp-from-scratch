@@ -71,11 +71,6 @@ class TextDataset(Dataset):
         corpus = load_dataset("wikipedia", "20220301.en", split="train")
         frequencies = np.load(FREQUENCIES_SAVE_PATH)
         frequencies[:5] = 1.0
-        # try:
-        #     with open(CHUNKS_POSITIONS_PATH, "r") as f:
-        #         chunks = json.load(f)
-        # except:
-        #     chunks = []
         chunks = []
         return TextDataset(
             tokenizer=tokenizer, corpus=corpus, frequencies=frequencies, chunks=chunks
