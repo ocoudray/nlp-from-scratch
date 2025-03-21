@@ -28,9 +28,9 @@ jobs:
       run: |
         poetry install
 
-    - name: Lint with Pylint
+    - name: Run Ruff
       run: |
-        poetry run pylint .
+        ruff check .
 
     - name: Test with Pytest
       run: |
