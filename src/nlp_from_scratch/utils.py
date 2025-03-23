@@ -134,7 +134,8 @@ def retry_on_timeout(retries: int = 3, delay: int = 5):
                     return func(*args, **kwargs)
                 except Exception as e:
                     print(
-                        f"Attempt {attempt + 1} failed with error: {e}. Retrying in {delay} seconds..."
+                        f"""Attempt {attempt + 1} failed with error: {e}.
+                        Retrying in {delay} seconds..."""
                     )
                     time.sleep(delay)
             # If all retries fail, raise an exception
