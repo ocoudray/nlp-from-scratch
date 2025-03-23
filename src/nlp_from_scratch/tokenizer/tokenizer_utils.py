@@ -4,6 +4,8 @@ from datasets import load_dataset
 from tokenizers import Tokenizer, models, normalizers, pre_tokenizers
 from tqdm.auto import tqdm
 
+from nlp_from_scratch.utils import retry_on_timeout
+
 
 def instanciate_blank_tokenizer() -> Tokenizer:
     tokenizer = Tokenizer(models.WordPiece(unk_token="[UNK]"))
@@ -75,6 +77,7 @@ def filter_non_latin_characters(text: str) -> str:
     return "".join(char for char in text if is_latin_character(char))
 
 
+@retry_on_timeout(retries=5, delay=5)
 def iterate_other_dataset(
     name: str,
     max_iter: int,

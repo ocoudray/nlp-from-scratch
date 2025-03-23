@@ -4,7 +4,7 @@ import numpy as np
 from tqdm.auto import tqdm
 
 from nlp_from_scratch.constants import FREQUENCIES_SAVE_PATH
-from nlp_from_scratch.dataset import TextDataset
+from nlp_from_scratch.pre_training.dataset import TextDataset
 from nlp_from_scratch.utils import convert_counter_to_npy
 
 if __name__ == "__main__":

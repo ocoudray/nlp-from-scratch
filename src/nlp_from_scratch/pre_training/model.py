@@ -4,7 +4,14 @@ import torch
 from lightning import LightningModule
 from torch import nn
 
-from nlp_from_scratch.constants import MAX_LEN, VOCAB_SIZE
+from nlp_from_scratch.constants import (
+    D_MODEL,
+    DIM_FF,
+    MAX_LEN,
+    NUM_HEADS,
+    NUM_LAYERS,
+    VOCAB_SIZE,
+)
 
 
 class PositionalEncoding(nn.Module):
@@ -24,7 +31,7 @@ class PositionalEncoding(nn.Module):
 
 
 class TransformerBlock(nn.Module):
-    def __init__(self, d_model, num_heads, dim_ff, dropout=0.0):
+    def __init__(self, d_model, num_heads, dim_ff, dropout=0.1):
         super().__init__()
         self.attn = nn.MultiheadAttention(
             d_model, num_heads, dropout=dropout, batch_first=True
@@ -46,26 +53,56 @@ class TransformerBlock(nn.Module):
         return x
 
 
-class SimpleTransformer(LightningModule):
-    def __init__(self, d_model=128, num_heads=4, dim_ff=512, num_layers=6):
+class TransformerEncoder(nn.Module):
+    def __init__(
+        self,
+        d_model=D_MODEL,
+        num_heads=NUM_HEADS,
+        dim_ff=DIM_FF,
+        num_layers=NUM_LAYERS,
+        vocab_size=VOCAB_SIZE,
+    ):
         super().__init__()
-        self.embedding = nn.Embedding(VOCAB_SIZE, d_model)
+        self.embedding = nn.Embedding(vocab_size, d_model)
         self.pos_encoding = PositionalEncoding(d_model)
         self.transformer_blocks = nn.ModuleList(
             [TransformerBlock(d_model, num_heads, dim_ff) for _ in range(num_layers)]
         )
-        self.fc_out = nn.Linear(d_model, VOCAB_SIZE)  # Output layer for classification
-        self.dropout = nn.Dropout(0.0)
-        self.loss_fn = nn.CrossEntropyLoss(reduction="none")
-        self.training_step_losses = []
-        self.optimizer_state_path = None
 
-    def get_embeddings(self, x, mask=None):
+    def forward(self, x, mask=None):
         x = self.embedding(x)
         x = self.pos_encoding(x)
         for block in self.transformer_blocks:
             x = block(x, mask)
         return x
+
+
+class BertMLM(LightningModule):
+    def __init__(
+        self,
+        d_model=D_MODEL,
+        num_heads=NUM_HEADS,
+        dim_ff=DIM_FF,
+        num_layers=NUM_LAYERS,
+        vocab_size=VOCAB_SIZE,
+    ):
+        super().__init__()
+        self.vocab_size = vocab_size
+        self.transformer_encoder = TransformerEncoder(
+            d_model=d_model,
+            num_heads=num_heads,
+            dim_ff=dim_ff,
+            num_layers=num_layers,
+            vocab_size=vocab_size,
+        )
+        self.fc_out = nn.Linear(d_model, vocab_size)  # Output layer for classification
+        self.dropout = nn.Dropout(0.1)
+        self.loss_fn = nn.CrossEntropyLoss(reduction="none")
+        self.training_step_losses = []
+        self.optimizer_state_path = None
+
+    def get_embeddings(self, x, mask=None):
+        return self.transformer_encoder(x, mask=mask)
 
     def _classify_output(self, x):
         return self.fc_out(x)
@@ -78,9 +115,9 @@ class SimpleTransformer(LightningModule):
         # training_step defines the train loop.
         inputs, mask, attention_mask, labels = batch
         output = self.forward(inputs, mask=attention_mask)
-        loss_matrix = self.loss_fn(output.view(-1, VOCAB_SIZE), labels.view(-1)).view(
-            labels.size()
-        )
+        loss_matrix = self.loss_fn(
+            output.view(-1, self.vocab_size), labels.view(-1)
+        ).view(labels.size())
         loss = loss_matrix[mask].mean()
         self.training_step_losses.append(loss.item())
         if (

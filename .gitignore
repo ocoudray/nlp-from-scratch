@@ -1,5 +1,6 @@
 notebooks/*
 tb_logs/*
+tb_logs_old/*
 *.pyc
 .DS_Store
 models/*
