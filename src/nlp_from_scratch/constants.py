@@ -12,7 +12,7 @@ DUMMY_JSON_FILE_PATH = (
 )
 TB_LOGS_PATH_PREFIX = "/Users/ocoudray/Documents/Projects/nlp-from-scratch/tb_logs/"
 REGEX_EPOCH_STEPS = r"epoch=(?P<epoch>\d+)-step=(?P<step>\d+)\.ckpt"
-VOCAB_SIZE = 10_000
+VOCAB_SIZE = 50_000
 MAX_LEN = 256
 STRIDE = 32
 N_STEPS = 100_000

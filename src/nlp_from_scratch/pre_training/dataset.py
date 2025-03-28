@@ -15,6 +15,7 @@ class DatasetMLM(Dataset):
         text_key: str = "text",
         start_offset: int = 0,
         tokenizer: Tokenizer | None = None,
+        max_len: int = MAX_LEN,
     ):
         self.name = name
         self.split = split
@@ -22,12 +23,12 @@ class DatasetMLM(Dataset):
         self.chunks = []
         self.offset = start_offset
         self.tokenizer = tokenizer
+        self.max_len = max_len
 
     def prepare_chunks(
         self,
         n_chunks: int = 1000,
         offset: int = 0,
-        max_len: int = MAX_LEN,
     ):
         chunks = []
         k = 0
@@ -49,7 +50,7 @@ class DatasetMLM(Dataset):
                     self.tokenizer.token_to_id("[CLS]"),
                     self.tokenizer.token_to_id("[PAD]"),
                     self.tokenizer.token_to_id("."),
-                    max_len=max_len,
+                    max_len=self.max_len,
                 )
                 k += 1
         self.chunks = torch.stack(chunks)
@@ -68,7 +69,7 @@ class DatasetMLM(Dataset):
         attention_mask_vector = labels == self.tokenizer.token_to_id("[PAD]")
         # Masking process: randomly mask a portion of the tokens
         masked = (
-            (torch.rand(MAX_LEN) <= mask_prob)
+            (torch.rand(self.max_len) <= mask_prob)
             * (input_ids != self.tokenizer.token_to_id("[CLS]"))
             * (input_ids != self.tokenizer.token_to_id("[SEP]"))
             * (input_ids != self.tokenizer.token_to_id("[PAD]"))

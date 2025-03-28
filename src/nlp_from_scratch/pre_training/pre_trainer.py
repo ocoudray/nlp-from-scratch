@@ -19,6 +19,7 @@ class MLMTrainer:
         model_name: str,
         model_version: int,
         chunks_per_epoch: int,
+        max_len: int = 256,
     ):
         self.dataset = dataset
         self.model = model
@@ -31,6 +32,7 @@ class MLMTrainer:
             version=self.model_version,
         )
         self.trainer = None
+        self.max_len = max_len
 
     def set_up_new_trainer(self, training_params: TrainingParams, max_epochs: int = 1):
         self.trainer = Trainer(
@@ -64,13 +66,14 @@ class MLMTrainer:
         for k in range(training_params.n_iterations):
             if k >= 1:
                 self.model = BertMLM.load_from_checkpoint(
-                    vocab_size=self.model.vocab_size,
+                    **self.model.hparams,
                     checkpoint_path=self.get_last_checkpoint(),
                 )
                 self.model.optimizer_state_path = self.get_last_checkpoint()
             logger.info(f"Prepare chunks for subepoch {k}")
             self.dataset.prepare_chunks(
-                n_chunks=self.chunks_per_epoch, offset=self.dataset.offset
+                n_chunks=self.chunks_per_epoch,
+                offset=self.dataset.offset,
             )
             dataloader = DataLoader(
                 dataset=self.dataset,
