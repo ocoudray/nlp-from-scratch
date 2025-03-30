@@ -138,9 +138,9 @@ class BertMLM(LightningModule):
 
     def configure_optimizers(self):
         if self.optimizer_state_path is None:
-            optimizer = torch.optim.AdamW(self.parameters(), lr=5e-5)
+            optimizer = torch.optim.AdamW(self.parameters(), lr=2e-5)
         else:
-            optimizer = torch.optim.AdamW(self.parameters(), lr=5e-5)
+            optimizer = torch.optim.AdamW(self.parameters(), lr=2e-5)
             optimizer.load_state_dict(
                 torch.load(self.optimizer_state_path)["optimizer_states"][0]
             )

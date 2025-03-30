@@ -64,12 +64,14 @@ class MLMTrainer:
         training_params: TrainingParams,
     ):
         for k in range(training_params.n_iterations):
-            if k >= 1:
+            try:
                 self.model = BertMLM.load_from_checkpoint(
                     **self.model.hparams,
                     checkpoint_path=self.get_last_checkpoint(),
                 )
                 self.model.optimizer_state_path = self.get_last_checkpoint()
+            except Exception:
+                logger.warning("No checkpoint found, starting from scratch.")
             logger.info(f"Prepare chunks for subepoch {k}")
             self.dataset.prepare_chunks(
                 n_chunks=self.chunks_per_epoch,

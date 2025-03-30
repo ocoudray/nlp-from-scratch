@@ -7,3 +7,4 @@ python scripts/train_mlm.py \
     --max_len 512 \
     --num_heads 12 \
     --num_layers 12 \
+    --offset 22250

@@ -15,6 +15,7 @@ from nlp_from_scratch.pre_training.training_params import TrainingParams
 )
 @click.option("--model_version", default=0, help="Version of the model.")
 @click.option("--chunks_per_epoch", default=2**20, help="Number of chunks per epoch.")
+@click.option("--offset", default=0, help="Offset for the dataset.")
 @click.option(
     "--accumulate_grad_batches",
     default=8,
@@ -33,6 +34,7 @@ def main(
     dataset_name,
     model_version,
     chunks_per_epoch,
+    offset,
     accumulate_grad_batches,
     log_every_n_steps,
     batch_size,
@@ -48,6 +50,7 @@ def main(
         name=dataset_name,
         tokenizer=tokenizer,
         max_len=max_len,
+        start_offset=offset,
     )
     model = BertMLM(
         vocab_size=vocab_size,
